@@ -82,7 +82,7 @@ def make_hotkey_window():
                         default=parametrs["hotkey_dict"]["shift"])],
               [sg.Button('сохранить')]
               ]
-    return sg.Window('настройка хоткея', layout, finalize=True, size=(500, 300), return_keyboard_events=True,)
+    return sg.Window('настройка хоткея', layout, finalize=True, size=(500, 340), return_keyboard_events=True,)
 
 
 def choose_hotkey():
