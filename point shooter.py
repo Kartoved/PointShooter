@@ -121,25 +121,27 @@ def make_screenshot():
     counter = int(parametrs["counter"])
     screenshot = pyautogui.screenshot(f"{folder}/{str(counter)}.png", region=(
         parametrs["x"], parametrs["y"], parametrs["width"], parametrs["height"]))
-    counter += 1
     s.play()
     main_window['ALERT'].update(value=f"Сделан скриншот  {str(counter)}.png")
+    counter += 1
     update_counter()
     time.sleep(1)
 
 
 def update_parametrs():
     '''обновление настроек'''
+    global folder
     try:
         parametrs["x"] = int(win_options["x"].get())
         parametrs["y"] = int(win_options["y"].get())
         parametrs["width"] = int(win_options["width"].get())
         parametrs["height"] = int(win_options["height"].get())
         parametrs["counter"] = int(win_options["counter"].get())
+        parametrs["folder"] = win_options["folder"].get()
         win_options.close()
     except:
         sg.Popup('Используйте только цифры!!!', font=('Arial', 14, 'italic'))
-    parametrs['folder'] = win_options["folder"].get()
+    folder = parametrs["folder"]
     with open('parametrs.json', 'w') as f:
         json.dump(parametrs, f)
 
