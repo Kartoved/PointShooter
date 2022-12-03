@@ -66,51 +66,36 @@ def make_main_window():
         [sg.Button('нажми меня', pad=(20, 10), size=40, border_width=2)],
         [sg.Text('      чтобы сделать скрин', key='ALERT')]
     ]
-    return sg.Window('Point shooter', layout, size=(270, 100), finalize=True, return_keyboard_events=True)
+    return sg.Window('Point shooter', layout, size=(400, 150), finalize=True, return_keyboard_events=True)
 
 
 def make_hotkey_window():
     '''создаёт окно назначения горячей клавиши'''
+    
+    if '+' in parametrs['hotkey']:
+        old_hotkey = parametrs['hotkey'].split('+')
+    else:
+        old_hotkey = ('', parametrs['hotkey'])
+        
     layout = [[sg.Text(text_hotkey)],
-              [sg.Radio('Без кнопки', group_id=1, key='none',
-                        default=parametrs["hotkey_dict"]["none"])],
-              [sg.Radio('alt', group_id=1, key='alt',
-                        default=parametrs["hotkey_dict"]["alt"])],
-              [sg.Radio('ctrl', group_id=1, key='ctrl', default=parametrs["hotkey_dict"]["ctrl"]),
-               sg.Input(key='hotkey2', pad=(50, 0), size=3, default_text="s")],
-              [sg.Radio('shift', group_id=1, key='shift',
-                        default=parametrs["hotkey_dict"]["shift"])],
-              [sg.Button('сохранить')]
+               [sg.Combo(['', 'ctrl', 'alt','shift'], default_value=old_hotkey[0]),
+                sg.Text(' + '),
+                sg.Input(key='hotkey2', pad=(50, 0), size=3, default_text=old_hotkey[-1])],
+
+              [sg.Button('Сохранить')]
               ]
-    return sg.Window('настройка хоткея', layout, finalize=True, size=(500, 340), return_keyboard_events=True,)
+    return sg.Window('Настройка хоткея', layout, finalize=True, size=(500, 400), return_keyboard_events=True,)
 
 
 def choose_hotkey():
     '''настройка горячей клавиши'''
-    if values['alt']:
-        parametrs['hotkey'] = 'alt+' + window['hotkey2'].get()
-        parametrs["hotkey_dict"]["none"] = False
-        parametrs["hotkey_dict"]["alt"] = True
-        parametrs["hotkey_dict"]["ctrl"] = False
-        parametrs["hotkey_dict"]["shift"] = False
-    elif values['ctrl']:
-        parametrs['hotkey'] = 'ctrl+' + window['hotkey2'].get()
-        parametrs["hotkey_dict"]["none"] = False
-        parametrs["hotkey_dict"]["alt"] = False
-        parametrs["hotkey_dict"]["ctrl"] = True
-        parametrs["hotkey_dict"]["shift"] = False
-    elif values['shift']:
-        parametrs['hotkey'] = 'shift+' + window['hotkey2'].get()
-        parametrs["hotkey_dict"]["none"] = False
-        parametrs["hotkey_dict"]["alt"] = False
-        parametrs["hotkey_dict"]["ctrl"] = False
-        parametrs["hotkey_dict"]["shift"] = True
+    print(values, parametrs)
+    keyboard.unhook_all_hotkeys()
+    if values[0]:
+        parametrs['hotkey'] = values[0] + '+' + window['hotkey2'].get()
     else:
         parametrs['hotkey'] = window['hotkey2'].get()
-        parametrs["hotkey_dict"]["none"] = True
-        parametrs["hotkey_dict"]["alt"] = False
-        parametrs["hotkey_dict"]["ctrl"] = False
-        parametrs["hotkey_dict"]["shift"] = False
+
     keyboard.add_hotkey(parametrs["hotkey"], make_screenshot, suppress=False)
     with open('parametrs.json', 'w') as f:
         json.dump(parametrs, f)
@@ -172,7 +157,7 @@ while True:
                  text_about, font=('Arial', 14, 'italic'))
     elif event == 'Настройка хоткея':
         win_hotkey = make_hotkey_window()
-    elif event == 'сохранить':
+    elif event == 'Сохранить':
         choose_hotkey()
         win_hotkey.close()
     elif event == sg.WIN_CLOSED:
