@@ -18,8 +18,4 @@
 Иконка PointShot была взята с ресурсов сайта Flaticon.com  
 Звук скриншота был взят с сайта https://zvukipro.com  
 Спасибо!
-
-# Контакты
-https://github.com/Kartoved24  
-kartoved24@ya.ru  
-Telegram https://t.me/kartoved
+  
